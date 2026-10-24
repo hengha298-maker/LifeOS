@@ -1,4 +1,4 @@
-"""LifeOS V0.1：仅供本人在本地电脑使用。"""
+"""LifeOS V0.2：仅供本人在本地电脑使用。"""
 from datetime import date
 from pathlib import Path
 
@@ -17,8 +17,8 @@ init_db(DB)
 NOTES.mkdir(parents=True, exist_ok=True)
 
 st.sidebar.title('🌿 LifeOS')
-st.sidebar.caption('V0.1 | 数据只保存在本机')
-page = st.sidebar.radio('模块', ['🏠 首页', '💰 财富', '🔧 制粉检修', '📚 知识库', '🌱 成长'])
+st.sidebar.caption('V0.2 | 数据只保存在本机')
+page = st.sidebar.radio('模块', ['🏠 首页', '💰 财富', '🔧 制粉检修', '🌳 系统树', '📥 导入台账', '📚 知识库', '🌱 成长'])
 st.sidebar.divider()
 st.sidebar.caption('仅限本机 127.0.0.1')
 
@@ -56,7 +56,7 @@ if page == '🏠 首页':
     a.metric('检修记录', len(data))
     b.metric('待处理', sum(x['status'] == '待处理' for x in data))
     c.metric('已完成', sum(x['status'] == '已完成' for x in data))
-    st.info('第一版优先完成制粉检修台账。财富、成长模块暂时只是入口。')
+    st.info('V0.2 增加设备知识树、检修时间轴和台账导入；财富、成长模块暂为入口。')
     st.write('本地 SQLite | Markdown 笔记 | CSV 导出 | 不上传个人数据')
 
 elif page == '🔧 制粉检修':
@@ -131,6 +131,12 @@ elif page == '🔧 制粉检修':
                 delete_record(selected_id, DB)
                 st.rerun()
 
+elif page == '🌳 系统树':
+    from lifeos.pages import render_catalog
+    render_catalog(DB)
+elif page == '📥 导入台账':
+    from lifeos.pages import render_import
+    render_import(DB)
 elif page == '📚 知识库':
     st.title('📚 我的 Markdown 笔记')
     markdown_files = sorted(
